@@ -52,6 +52,11 @@
   - Processing State：`VALID`
 - App Store Connect 版本 `1.0` 已选择 Build `2`。
 - App Review 联系信息已填写；该 App 不需要登录，也不需要 demo 账号。
+- 出口合规已在线设置：Build `2` 不使用非豁免加密。
+- Xcode 工程已加入 `ITSAppUsesNonExemptEncryption = NO`，后续新 build 会默认声明不使用非豁免加密。
+- 版权信息已在线设置：`2026 lei liu`。
+- 内容版权信息已在线设置：`DOES_NOT_USE_THIRD_PARTY_CONTENT`。
+- 定价已在线设置：免费价格等级，基础地区 `USA`，价格点 `0.0`。
 - 年龄分级已在线核验：
   - App Store Age Rating：`FOUR_PLUS`
   - Brazil Age Rating：`L`
@@ -69,8 +74,8 @@
 
 - 补齐 `Localizable.xcstrings`，为后续多语言截图做准备。
 - 为 `en-US` 生成独立英文截图，或保留当前仅中文截图的发布策略。
-- 在 App Store Connect 完成或确认隐私问卷、价格、可用地区、版权信息。
+- 在 App Store Connect 网页手动完成 App 隐私问卷。
 
 ## 下一步建议
 
-下一步可以在 App Store Connect 完善或确认隐私问卷、价格、可用地区、版权信息。若要补英文截图，需要先补齐 `Localizable.xcstrings`，再按英文环境重新生成截图。
+下一步需要在 App Store Connect 网页手动完成 App 隐私问卷：选择“不收集数据”，发布隐私答案后即可再次提交审核。若要补英文截图，需要先补齐 `Localizable.xcstrings`，再按英文环境重新生成截图。
