@@ -4,10 +4,17 @@ struct ContentView: View {
     @EnvironmentObject private var progress: LearningProgress
     @EnvironmentObject private var speechCoach: SpeechCoach
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @State private var screenshotMode: Int
+
+    init() {
+        _screenshotMode = State(initialValue: UserDefaults.standard.integer(forKey: "ScreenshotMode"))
+    }
 
     var body: some View {
         Group {
-            if horizontalSizeClass == .regular {
+            if screenshotMode > 0 {
+                StoreScreenshotView(mode: screenshotMode)
+            } else if horizontalSizeClass == .regular {
                 NavigationSplitView {
                     HomeSidebar()
                 } detail: {
@@ -1323,6 +1330,393 @@ private struct AppBackground: View {
             endPoint: .bottomTrailing
         )
         .ignoresSafeArea()
+    }
+}
+
+private struct StoreScreenshotView: View {
+    let mode: Int
+
+    private var samplePack: LessonPack {
+        switch mode {
+        case 2: LessonLibrary.packs(for: .preschool).first { $0.theme == .animals } ?? LessonLibrary.packs(for: .preschool)[0]
+        case 3: LessonLibrary.packs(for: .preschool).first { $0.theme == .toys } ?? LessonLibrary.packs(for: .preschool)[0]
+        case 4: LessonLibrary.packs(for: .bridge).first { $0.theme == .nature } ?? LessonLibrary.packs(for: .bridge)[0]
+        case 5: LessonLibrary.packs(for: .toddler).first { $0.theme == .family } ?? LessonLibrary.packs(for: .toddler)[0]
+        default: LessonLibrary.packs(for: .preschool).first { $0.theme == .food } ?? LessonLibrary.packs(for: .preschool)[0]
+        }
+    }
+
+    private var title: String {
+        switch mode {
+        case 2: "真实图片点读卡"
+        case 3: "多种课堂小游戏"
+        case 4: "学习记录和计划"
+        case 5: "家长陪伴更安心"
+        default: "2-6岁英语启蒙"
+        }
+    }
+
+    private var subtitle: String {
+        switch mode {
+        case 2: "看图、听音、跟读，宝宝更容易理解第一批英语单词。"
+        case 3: "气泡点点、影子配对、节奏拍词、字母小火车，把练习变成游戏。"
+        case 4: "星星奖励、成就贴纸和一周计划，帮助家长轻松坚持。"
+        case 5: "可改宝宝名字、设置每日目标和语速，适合亲子陪学。"
+        default: "用图片、故事和小游戏，陪宝宝每天轻松认识英语。"
+        }
+    }
+
+    var body: some View {
+        GeometryReader { proxy in
+            let isPad = proxy.size.width > 700
+
+            ZStack {
+                AppBackground()
+                VStack(alignment: .leading, spacing: isPad ? 26 : 20) {
+                    StoreScreenshotHeader(title: title, subtitle: subtitle, isPad: isPad)
+
+                    Group {
+                        switch mode {
+                        case 2:
+                            StoreCardShowcase(pack: samplePack, isPad: isPad)
+                        case 3:
+                            StoreGameShowcase(pack: samplePack, isPad: isPad)
+                        case 4:
+                            StoreProgressShowcase(isPad: isPad)
+                        case 5:
+                            StoreParentShowcase(isPad: isPad)
+                        default:
+                            StoreHomeShowcase(isPad: isPad)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+                .padding(.horizontal, isPad ? 72 : 28)
+                .padding(.top, isPad ? 58 : 34)
+                .padding(.bottom, isPad ? 58 : 38)
+            }
+        }
+    }
+}
+
+private struct StoreScreenshotHeader: View {
+    let title: String
+    let subtitle: String
+    let isPad: Bool
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: isPad ? 16 : 12) {
+            HStack(spacing: 12) {
+                Image(systemName: "sparkles")
+                    .font(.system(size: isPad ? 28 : 22, weight: .black))
+                    .foregroundStyle(.white)
+                    .frame(width: isPad ? 58 : 48, height: isPad ? 58 : 48)
+                    .background(Color(red: 0.97, green: 0.42, blue: 0.25), in: RoundedRectangle(cornerRadius: 8))
+                Text("钥钥的英语课")
+                    .font(.system(size: isPad ? 34 : 26, weight: .black, design: .rounded))
+                    .foregroundStyle(.primary)
+            }
+
+            Text(title)
+                .font(.system(size: isPad ? 64 : 42, weight: .black, design: .rounded))
+                .lineLimit(2)
+                .minimumScaleFactor(0.72)
+                .fixedSize(horizontal: false, vertical: true)
+
+            Text(subtitle)
+                .font(.system(size: isPad ? 26 : 18, weight: .semibold, design: .rounded))
+                .foregroundStyle(.secondary)
+                .lineSpacing(4)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+}
+
+private struct StoreHomeShowcase: View {
+    let isPad: Bool
+
+    var body: some View {
+        let packs = Array(LessonLibrary.packs(for: .preschool).prefix(isPad ? 6 : 4))
+        VStack(alignment: .leading, spacing: 18) {
+            HStack(spacing: 12) {
+                StoreMetric(value: "8", label: "主题", symbol: "square.grid.2x2.fill", color: Color(red: 0.40, green: 0.48, blue: 0.92))
+                StoreMetric(value: "24", label: "词卡", symbol: "photo.fill", color: Color(red: 0.22, green: 0.62, blue: 0.48))
+                StoreMetric(value: "4", label: "游戏", symbol: "gamecontroller.fill", color: Color(red: 0.97, green: 0.42, blue: 0.25))
+            }
+
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: isPad ? 230 : 142), spacing: 14)], spacing: 14) {
+                ForEach(packs) { pack in
+                    StorePackTile(pack: pack, compact: !isPad)
+                }
+            }
+        }
+    }
+}
+
+private struct StoreCardShowcase: View {
+    let pack: LessonPack
+    let isPad: Bool
+
+    var body: some View {
+        let cards = pack.cards
+        VStack(spacing: isPad ? 22 : 16) {
+            if let first = cards.first {
+                VStack(spacing: isPad ? 18 : 14) {
+                    VocabularyImage(card: first)
+                        .frame(width: isPad ? 250 : 178, height: isPad ? 250 : 178)
+                        .padding(isPad ? 34 : 24)
+                        .background(first.color.opacity(0.14), in: Circle())
+                    Text(first.word)
+                        .font(.system(size: isPad ? 72 : 50, weight: .black, design: .rounded))
+                    Text(first.meaning)
+                        .font(.system(size: isPad ? 32 : 24, weight: .bold, design: .rounded))
+                        .foregroundStyle(.secondary)
+                    Label("点一下就能听英文发音", systemImage: "speaker.wave.2.fill")
+                        .font(.system(size: isPad ? 24 : 18, weight: .bold, design: .rounded))
+                        .foregroundStyle(first.color)
+                }
+                .padding(isPad ? 36 : 24)
+                .frame(maxWidth: .infinity)
+                .background(.white, in: RoundedRectangle(cornerRadius: 8))
+                .shadow(color: first.color.opacity(0.18), radius: 20, y: 10)
+            }
+
+            HStack(spacing: 12) {
+                ForEach(cards) { card in
+                    VStack(spacing: 8) {
+                        VocabularyImage(card: card)
+                            .frame(width: isPad ? 86 : 56, height: isPad ? 86 : 56)
+                        Text(card.word)
+                            .font(.headline.bold())
+                            .minimumScaleFactor(0.75)
+                    }
+                    .frame(maxWidth: .infinity, minHeight: isPad ? 150 : 106)
+                    .background(.white.opacity(0.86), in: RoundedRectangle(cornerRadius: 8))
+                }
+            }
+        }
+    }
+}
+
+private struct StoreGameShowcase: View {
+    let pack: LessonPack
+    let isPad: Bool
+
+    var body: some View {
+        let cards = pack.cards
+        let target = cards.first
+        VStack(alignment: .leading, spacing: 16) {
+            if let target {
+                HStack(spacing: 16) {
+                    VocabularyImage(card: target)
+                        .frame(width: isPad ? 150 : 104, height: isPad ? 150 : 104)
+                        .padding(18)
+                        .background(target.color.opacity(0.12), in: RoundedRectangle(cornerRadius: 8))
+                    VStack(alignment: .leading, spacing: 8) {
+                        Label("气泡游戏", systemImage: "gamecontroller.fill")
+                            .font(.system(size: isPad ? 28 : 20, weight: .black, design: .rounded))
+                        Text("点到 \(target.meaning)")
+                            .font(.system(size: isPad ? 42 : 28, weight: .black, design: .rounded))
+                        Text("听音识图，玩着记单词")
+                            .font(.system(size: isPad ? 22 : 16, weight: .semibold, design: .rounded))
+                            .foregroundStyle(.secondary)
+                    }
+                    Spacer()
+                }
+                .padding(isPad ? 24 : 18)
+                .background(.white, in: RoundedRectangle(cornerRadius: 8))
+            }
+
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: isPad ? 210 : 138), spacing: 14)], spacing: 14) {
+                StoreGameCard(title: "影子配对", symbol: "circle.dashed.inset.filled", color: Color(red: 0.40, green: 0.48, blue: 0.92), isPad: isPad)
+                StoreGameCard(title: "节奏拍词", symbol: "music.note", color: Color(red: 0.92, green: 0.36, blue: 0.58), isPad: isPad)
+                StoreGameCard(title: "字母小火车", symbol: "tram.fill", color: Color(red: 0.22, green: 0.62, blue: 0.48), isPad: isPad)
+                StoreGameCard(title: "听音小测", symbol: "checkmark.circle.fill", color: Color(red: 0.98, green: 0.66, blue: 0.16), isPad: isPad)
+            }
+        }
+    }
+}
+
+private struct StoreProgressShowcase: View {
+    let isPad: Bool
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            HStack(spacing: 12) {
+                StoreMetric(value: "18", label: "已练卡片", symbol: "checkmark.circle.fill", color: Color(red: 0.22, green: 0.62, blue: 0.48))
+                StoreMetric(value: "21", label: "小星星", symbol: "star.fill", color: Color(red: 0.92, green: 0.58, blue: 0.10))
+                StoreMetric(value: "8", label: "主题课", symbol: "square.grid.2x2.fill", color: Color(red: 0.40, green: 0.48, blue: 0.92))
+            }
+
+            Text("成就贴纸")
+                .font(.system(size: isPad ? 30 : 22, weight: .black, design: .rounded))
+
+            HStack(spacing: 12) {
+                StoreBadge(title: "敢开口", detail: "完成3次跟读", symbol: "mouth.fill", color: Color(red: 0.92, green: 0.36, blue: 0.58), isPad: isPad)
+                StoreBadge(title: "小耳朵", detail: "听满8张卡", symbol: "ear.fill", color: Color(red: 0.20, green: 0.58, blue: 0.86), isPad: isPad)
+                StoreBadge(title: "游戏星", detail: "完成15次游戏", symbol: "gamecontroller.fill", color: Color(red: 0.22, green: 0.62, blue: 0.48), isPad: isPad)
+            }
+
+            Text("一周启蒙计划")
+                .font(.system(size: isPad ? 30 : 22, weight: .black, design: .rounded))
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: isPad ? 170 : 104), spacing: 10)], spacing: 10) {
+                ForEach(["周一 动物", "周二 食物", "周三 家庭", "周四 颜色", "周五 玩具", "周六 自然"], id: \.self) { item in
+                    Text(item)
+                        .font(.system(size: isPad ? 20 : 14, weight: .bold, design: .rounded))
+                        .frame(maxWidth: .infinity, minHeight: isPad ? 72 : 52)
+                        .background(.white, in: RoundedRectangle(cornerRadius: 8))
+                }
+            }
+        }
+    }
+}
+
+private struct StoreParentShowcase: View {
+    let isPad: Bool
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            StoreSettingRow(title: "宝宝名字", value: "安安的英语课", symbol: "person.crop.circle.fill", color: Color(red: 0.97, green: 0.42, blue: 0.25), isPad: isPad)
+            StoreSettingRow(title: "每日目标", value: "10分钟", symbol: "timer", color: Color(red: 0.22, green: 0.62, blue: 0.48), isPad: isPad)
+            StoreSettingRow(title: "温和模式", value: "已开启", symbol: "heart.fill", color: Color(red: 0.92, green: 0.36, blue: 0.58), isPad: isPad)
+            StoreSettingRow(title: "语速调节", value: "适合宝宝慢速听", symbol: "speaker.wave.2.fill", color: Color(red: 0.40, green: 0.48, blue: 0.92), isPad: isPad)
+
+            VStack(alignment: .leading, spacing: 10) {
+                Text("亲子陪伴建议")
+                    .font(.system(size: isPad ? 30 : 22, weight: .black, design: .rounded))
+                Text("每次学习不超过15分钟，重复听说，比一次学很多更有效。")
+                    .font(.system(size: isPad ? 24 : 17, weight: .semibold, design: .rounded))
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(isPad ? 24 : 18)
+            .background(.white, in: RoundedRectangle(cornerRadius: 8))
+        }
+    }
+}
+
+private struct StoreMetric: View {
+    let value: String
+    let label: String
+    let symbol: String
+    let color: Color
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Image(systemName: symbol)
+                .font(.headline)
+                .foregroundStyle(color)
+            Text(value)
+                .font(.system(size: 28, weight: .black, design: .rounded))
+            Text(label)
+                .font(.caption.weight(.bold))
+                .foregroundStyle(.secondary)
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, minHeight: 112, alignment: .leading)
+        .background(.white, in: RoundedRectangle(cornerRadius: 8))
+    }
+}
+
+private struct StorePackTile: View {
+    let pack: LessonPack
+    let compact: Bool
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: compact ? 10 : 14) {
+            PackCoverImage(pack: pack)
+                .frame(width: compact ? 52 : 72, height: compact ? 52 : 72)
+                .padding(8)
+                .background(pack.theme.tint.opacity(0.14), in: RoundedRectangle(cornerRadius: 8))
+            Text(pack.title)
+                .font(.system(size: compact ? 19 : 25, weight: .black, design: .rounded))
+            Text(pack.cards.map(\.word).joined(separator: " · "))
+                .font(.system(size: compact ? 13 : 17, weight: .semibold, design: .rounded))
+                .foregroundStyle(.secondary)
+                .lineLimit(2)
+        }
+        .padding(compact ? 14 : 18)
+        .frame(maxWidth: .infinity, minHeight: compact ? 150 : 196, alignment: .leading)
+        .background(.white, in: RoundedRectangle(cornerRadius: 8))
+    }
+}
+
+private struct StoreGameCard: View {
+    let title: String
+    let symbol: String
+    let color: Color
+    let isPad: Bool
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Image(systemName: symbol)
+                .font(.system(size: isPad ? 36 : 26, weight: .black))
+                .foregroundStyle(color)
+                .frame(width: isPad ? 62 : 48, height: isPad ? 62 : 48)
+                .background(color.opacity(0.14), in: RoundedRectangle(cornerRadius: 8))
+            Text(title)
+                .font(.system(size: isPad ? 28 : 20, weight: .black, design: .rounded))
+        }
+        .padding(isPad ? 22 : 16)
+        .frame(maxWidth: .infinity, minHeight: isPad ? 154 : 118, alignment: .leading)
+        .background(.white, in: RoundedRectangle(cornerRadius: 8))
+    }
+}
+
+private struct StoreBadge: View {
+    let title: String
+    let detail: String
+    let symbol: String
+    let color: Color
+    let isPad: Bool
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Image(systemName: symbol)
+                .font(.system(size: isPad ? 30 : 22, weight: .bold))
+                .foregroundStyle(color)
+                .frame(width: isPad ? 58 : 44, height: isPad ? 58 : 44)
+                .background(color.opacity(0.14), in: Circle())
+            Text(title)
+                .font(.system(size: isPad ? 25 : 18, weight: .black, design: .rounded))
+            Text(detail)
+                .font(.system(size: isPad ? 17 : 12, weight: .semibold, design: .rounded))
+                .foregroundStyle(.secondary)
+                .lineLimit(2)
+        }
+        .padding(isPad ? 20 : 14)
+        .frame(maxWidth: .infinity, minHeight: isPad ? 170 : 132, alignment: .leading)
+        .background(.white, in: RoundedRectangle(cornerRadius: 8))
+    }
+}
+
+private struct StoreSettingRow: View {
+    let title: String
+    let value: String
+    let symbol: String
+    let color: Color
+    let isPad: Bool
+
+    var body: some View {
+        HStack(spacing: 14) {
+            Image(systemName: symbol)
+                .font(.system(size: isPad ? 30 : 22, weight: .black))
+                .foregroundStyle(color)
+                .frame(width: isPad ? 62 : 48, height: isPad ? 62 : 48)
+                .background(color.opacity(0.14), in: RoundedRectangle(cornerRadius: 8))
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.system(size: isPad ? 22 : 16, weight: .bold, design: .rounded))
+                    .foregroundStyle(.secondary)
+                Text(value)
+                    .font(.system(size: isPad ? 30 : 21, weight: .black, design: .rounded))
+                    .minimumScaleFactor(0.74)
+            }
+            Spacer()
+        }
+        .padding(isPad ? 22 : 16)
+        .frame(maxWidth: .infinity, minHeight: isPad ? 112 : 88)
+        .background(.white, in: RoundedRectangle(cornerRadius: 8))
     }
 }
 

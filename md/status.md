@@ -41,6 +41,11 @@
   - `en-US` 版本文案字段非空
   - `zh-Hans` 版本文案字段非空
   - `en-US` 和 `zh-Hans` 的隐私 URL 非空
+- 截图模式已接入：`ScreenshotMode` 在 `ContentView.init()` 读取 `UserDefaults`。
+- `zh-Hans` App Store 截图已生成并上传到 App Store Connect：
+  - iPhone：5 张，`APP_IPHONE_67`
+  - iPad：5 张，`APP_IPAD_PRO_3GEN_129`
+- 截图在线数量已通过 App Store Connect API 核验。
 
 ## 当前产品内容
 
@@ -53,14 +58,10 @@
 ## 待完成
 
 - 补齐 `Localizable.xcstrings`，为后续多语言截图做准备。
-- 接入 `ScreenshotMode`，让截图脚本可以稳定打开指定页面。
-- 生成 App Store 截图。
-- 配置并验证 Fastlane 上传 lanes。
-- 上传 metadata。
-- 上传 screenshots。
+- 为 `en-US` 生成独立英文截图，或保留当前仅中文截图的发布策略。
 - 归档并上传二进制包。
 - 在 App Store Connect 完成年龄分级、隐私问卷、价格、可用地区、版权和审核信息。
 
 ## 下一步建议
 
-先做 `Localizable.xcstrings` 和 `ScreenshotMode`，再生成截图。商店文案可以先上传，但正式截图前必须确认截图可见文字已经本地化。
+下一步可以归档并上传二进制包。若要补英文截图，需要先补齐 `Localizable.xcstrings`，再按英文环境重新生成截图。
