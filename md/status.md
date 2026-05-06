@@ -50,6 +50,12 @@
   - Version：`1.0`
   - Build：`2`
   - Processing State：`VALID`
+- App Store Connect 版本 `1.0` 已选择 Build `2`。
+- App Review 联系信息已填写；该 App 不需要登录，也不需要 demo 账号。
+- 年龄分级已在线核验：
+  - App Store Age Rating：`FOUR_PLUS`
+  - Brazil Age Rating：`L`
+  - 无广告、无用户生成内容、无开放网页访问、无赌博内容。
 
 ## 当前产品内容
 
@@ -63,8 +69,8 @@
 
 - 补齐 `Localizable.xcstrings`，为后续多语言截图做准备。
 - 为 `en-US` 生成独立英文截图，或保留当前仅中文截图的发布策略。
-- 在 App Store Connect 完成年龄分级、隐私问卷、价格、可用地区、版权和审核信息。
+- 在 App Store Connect 完成或确认隐私问卷、价格、可用地区、版权信息。
 
 ## 下一步建议
 
-下一步可以在 App Store Connect 选择 build 2，并完善年龄分级、隐私问卷、价格、可用地区、版权和审核信息。若要补英文截图，需要先补齐 `Localizable.xcstrings`，再按英文环境重新生成截图。
+下一步可以在 App Store Connect 完善或确认隐私问卷、价格、可用地区、版权信息。若要补英文截图，需要先补齐 `Localizable.xcstrings`，再按英文环境重新生成截图。
