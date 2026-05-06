@@ -8,7 +8,7 @@
 - Bundle ID：`com.liuqingyue.EnglishSprout`
 - App 显示名：`钥钥的英语课`
 - 版本号：`1.0`
-- Build：`1`
+- Build：`2`
 - 开发团队：`QFZ87PFLK4`
 - 设备支持：iPhone + iPad
 - App Icon 已接入：`EnglishSprout/Resources/Assets.xcassets/AppIcon.appiconset/app-icon-1024.png`
@@ -46,6 +46,10 @@
   - iPhone：5 张，`APP_IPHONE_67`
   - iPad：5 张，`APP_IPAD_PRO_3GEN_129`
 - 截图在线数量已通过 App Store Connect API 核验。
+- 二进制包已归档并上传到 App Store Connect：
+  - Version：`1.0`
+  - Build：`2`
+  - Processing State：`VALID`
 
 ## 当前产品内容
 
@@ -59,9 +63,8 @@
 
 - 补齐 `Localizable.xcstrings`，为后续多语言截图做准备。
 - 为 `en-US` 生成独立英文截图，或保留当前仅中文截图的发布策略。
-- 归档并上传二进制包。
 - 在 App Store Connect 完成年龄分级、隐私问卷、价格、可用地区、版权和审核信息。
 
 ## 下一步建议
 
-下一步可以归档并上传二进制包。若要补英文截图，需要先补齐 `Localizable.xcstrings`，再按英文环境重新生成截图。
+下一步可以在 App Store Connect 选择 build 2，并完善年龄分级、隐私问卷、价格、可用地区、版权和审核信息。若要补英文截图，需要先补齐 `Localizable.xcstrings`，再按英文环境重新生成截图。

@@ -1,5 +1,11 @@
 # 上传二进制
 
+## 上传结果
+
+- 2026-05-06 已上传 Version `1.0` / Build `2`。
+- App Store Connect 已显示该构建，`processing_state` 为 `VALID`。
+- Build `1` 已经用过；本次只递增 `CURRENT_PROJECT_VERSION` 到 `2`，`MARKETING_VERSION` 仍为 `1.0`。
+
 ## 归档
 
 ```bash
