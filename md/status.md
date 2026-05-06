@@ -33,7 +33,14 @@
 - 隐私和支持 URL 已写入 metadata：
   - `privacy_url.txt`
   - `support_url.txt`
-- 已尝试上传 metadata。Fastlane 成功连接 App Store Connect，但首版在 `fetch_app_store_review_detail` 返回 `No data`，需要通过环境变量提供 App Review 联系人信息后重试。
+- Metadata 已上传到 App Store Connect，并通过 API 核验：
+  - App ID：`6766852992`
+  - Bundle ID：`com.liuqingyue.EnglishSprout`
+  - Version：`1.0`
+  - State：`PREPARE_FOR_SUBMISSION`
+  - `en-US` 版本文案字段非空
+  - `zh-Hans` 版本文案字段非空
+  - `en-US` 和 `zh-Hans` 的隐私 URL 非空
 
 ## 当前产品内容
 
@@ -49,7 +56,7 @@
 - 接入 `ScreenshotMode`，让截图脚本可以稳定打开指定页面。
 - 生成 App Store 截图。
 - 配置并验证 Fastlane 上传 lanes。
-- 上传 metadata：等待 App Review 联系人环境变量后重试。
+- 上传 metadata。
 - 上传 screenshots。
 - 归档并上传二进制包。
 - 在 App Store Connect 完成年龄分级、隐私问卷、价格、可用地区、版权和审核信息。

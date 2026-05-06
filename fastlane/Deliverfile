@@ -1,6 +1,6 @@
 app_identifier "com.liuqingyue.EnglishSprout"
-metadata_path "metadata"
-screenshots_path "screenshots"
+metadata_path File.expand_path("fastlane/metadata", Dir.pwd)
+screenshots_path File.expand_path("fastlane/screenshots", Dir.pwd)
 submit_for_review false
 automatic_release false
 force true

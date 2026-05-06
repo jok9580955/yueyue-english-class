@@ -6,8 +6,9 @@ DEFAULT_ASC_KEY_ID = "JD5G4LG5XN"
 DEFAULT_ASC_ISSUER_ID = "f68594d0-23a9-480d-8f1d-6c84b40bf664"
 DEFAULT_ASC_KEY_FILE = "/Users/ll/Desktop/AuthKey_JD5G4LG5XN.p8"
 FASTLANE_DIR = __dir__
-METADATA_PATH = File.join(FASTLANE_DIR, "metadata")
-SCREENSHOTS_PATH = File.join(FASTLANE_DIR, "screenshots")
+PROJECT_ROOT = File.expand_path("..", FASTLANE_DIR)
+METADATA_PATH = File.join(PROJECT_ROOT, "fastlane", "metadata")
+SCREENSHOTS_PATH = File.join(PROJECT_ROOT, "fastlane", "screenshots")
 
 def asc_api_key
   key_id = ENV.fetch("APP_STORE_CONNECT_API_KEY_ID", DEFAULT_ASC_KEY_ID)

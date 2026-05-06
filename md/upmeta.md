@@ -28,8 +28,13 @@ APP_REVIEW_EMAIL="..." \
 
 不要把审核联系人或 `.p8` 私钥内容写入项目文件。
 
-## 当前阻塞
+## 上传记录
 
-2026-05-06 已尝试运行 `/opt/homebrew/bin/fastlane ios upmeta`。Fastlane 已连接 App Store Connect，但首版上传在 `fetch_app_store_review_detail` 处返回 `No data`。
+2026-05-06 已使用 App Review 联系人环境变量运行 `/opt/homebrew/bin/fastlane ios upmeta`，Fastlane 成功完成。
 
-处理方式：按上面的环境变量补充审核联系人信息后重新运行 `upmeta`。
+App Store Connect API 核验结果：
+
+- `en-US` description、keywords、promotional text、support URL 非空。
+- `zh-Hans` description、keywords、promotional text、support URL 非空。
+- `en-US` name、subtitle、privacy URL 非空。
+- `zh-Hans` name、subtitle、privacy URL 非空。
