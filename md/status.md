@@ -28,6 +28,11 @@
 - 隐私政策和技术支持静态页已生成：
   - `docs/privacy.html`
   - `docs/support.html`
+- GitHub 仓库已创建：`https://github.com/jok9580955/yueyue-english-class`
+- GitHub Pages 已启用：`https://jok9580955.github.io/yueyue-english-class/`
+- 隐私和支持 URL 已写入 metadata：
+  - `privacy_url.txt`
+  - `support_url.txt`
 
 ## 当前产品内容
 
@@ -41,8 +46,6 @@
 
 - 补齐 `Localizable.xcstrings`，为后续多语言截图做准备。
 - 接入 `ScreenshotMode`，让截图脚本可以稳定打开指定页面。
-- 发布公开隐私政策和技术支持 URL。
-- 将隐私和支持 URL 写入 `fastlane/metadata/<locale>/privacy_url.txt` 和 `support_url.txt`。
 - 生成 App Store 截图。
 - 配置并验证 Fastlane 上传 lanes。
 - 上传 metadata。
