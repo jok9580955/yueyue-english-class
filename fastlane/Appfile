@@ -1,0 +1,5 @@
+app_identifier("com.liuqingyue.EnglishSprout")
+apple_id(ENV["APPLE_ID"])
+team_id("QFZ87PFLK4")
+
+itc_team_id(ENV["ITC_TEAM_ID"]) if ENV["ITC_TEAM_ID"].to_s.strip.length.positive?

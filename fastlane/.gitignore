@@ -1,0 +1,6 @@
+AuthKey_*.p8
+*.ipa
+*.xcarchive
+report.xml
+screenshots/.DS_Store
+metadata/.DS_Store
